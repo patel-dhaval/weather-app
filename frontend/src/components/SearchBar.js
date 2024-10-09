@@ -113,12 +113,11 @@ const SearchBar = ({ setWeatherData, setForecastData }) => {
           method: 'GET',
           credentials: 'include',
         });
-        console.log(response);
         if (!response.ok) {
-            setHasSettings(false);
             throw new Error('Failed to fetch user settings');
         }
-        if (response.body.length > 0) {
+        const body = await response.json();
+        if (Object.keys(body).length > 0) {
           setHasSettings(true);
         }
         else {
