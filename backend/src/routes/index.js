@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const passport = require('../auth/googleAuth');
 const cors = require('cors');
-
+const ensureAuthenticated = require('../middleware/authMiddleware');
 // Use CORS middleware
 router.use(cors({
   origin: 'http://localhost:3000',
@@ -42,7 +42,7 @@ router.get('/auth/google/callback', passport.authenticate('google', {
 });
 
 // Check authentication status
-router.get('/auth/status', (req, res) => {
+router.get('/auth/status', ensureAuthenticated, (req, res) => {
   if (req.isAuthenticated()) {
     res.json({
       isAuthenticated: true,
@@ -56,7 +56,7 @@ router.get('/auth/status', (req, res) => {
 });
 
 // Logout route
-router.get('/logout', (req, res) => {
+router.get('/logout', ensureAuthenticated, (req, res) => {
   console.log('Logout initiated');
   req.logout((err) => {
     if (err) {
