@@ -41,13 +41,12 @@ const Temperature = styled(Typography)({
 
 const StyledWeatherIcon = styled(WeatherIcon)({
   fontSize: '80px',
-  color: '#FFD700',
+  color: 'primary.light',
   flexShrink: 0,
 });
 
 const CurrentWeather = ({ weatherData }) => {
   if (!weatherData) return null;
-  console.log(weatherData);
   const { name, main, weather } = weatherData;
   const temperature =  Math.round(main.temp);
 
@@ -58,7 +57,7 @@ const CurrentWeather = ({ weatherData }) => {
         <WeatherDescription>{weather[0].description}</WeatherDescription>
         <Temperature>{temperature}°</Temperature>
       </WeatherInfo>
-      <StyledWeatherIcon iconId={weather[0].id.toString()} name="owm" night={isNight(weatherData)} />
+      <StyledWeatherIcon name="owm" iconId={weather[0].id.toString()} night={isNight(weatherData)} />
     </WeatherContainer>
   );
 };

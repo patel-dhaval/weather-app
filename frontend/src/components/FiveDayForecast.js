@@ -48,13 +48,24 @@ const StyledWeatherIcon = styled(WeatherIcon)({
   margin: '0 16px',
 });
 
+
 const FiveDayForecast = ({ forecastData }) => {
   if (!forecastData || !forecastData.list) return null;
 
   const groupedForecast = forecastData.list.reduce((acc, item) => {
     const date = new Date(item.dt * 1000).toLocaleDateString();
     if (!acc[date]) {
-      acc[date] = item;
+      acc[date] = {
+        ...item,
+        main: {
+          ...item.main,
+          temp_min: item.main.temp,
+          temp_max: item.main.temp
+        }
+      };
+    } else {
+      acc[date].main.temp_min = Math.min(acc[date].main.temp_min, item.main.temp);
+      acc[date].main.temp_max = Math.max(acc[date].main.temp_max, item.main.temp);
     }
     return acc;
   }, {});

@@ -8,12 +8,11 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('http://localhost:8080/auth/status', { 
+    fetch('/auth/status', { 
       credentials: 'include'
     })
       .then(response => response.json())
       .then(data => {
-        console.log(data);
         if (data.isAuthenticated) {
           navigate('/weather');
         }

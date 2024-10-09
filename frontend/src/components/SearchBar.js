@@ -83,8 +83,8 @@ const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
       width: '100%',
     },
     '& .MuiAutocomplete-paper': {
-      backgroundColor: '#202b3b', // Dark background for dropdown
-      color: '#9399a2', // Grey text color
+      backgroundColor: '#202b3b',
+      color: '#9399a2',
     },
     '& .MuiAutocomplete-option': {
       '&[data-focus="true"]': {
@@ -97,7 +97,7 @@ const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
     },
   }));
 
-const SearchBar = ({ onDataFetched, setForecastData }) => {
+const SearchBar = ({ setWeatherData, setForecastData }) => {
   const [city, setCity] = useState('');
   const [unit, setUnit] = useState('metric');
   const topCities = ['New York', 'London', 'Sydney'];
@@ -109,7 +109,7 @@ const SearchBar = ({ onDataFetched, setForecastData }) => {
   useEffect(() => {
     const checkUserSettings = async () => {
       try {
-        const response = await fetch('http://localhost:8080/settings', {
+        const response = await fetch('/settings', {
           method: 'GET',
           credentials: 'include',
         });
@@ -118,11 +118,17 @@ const SearchBar = ({ onDataFetched, setForecastData }) => {
             setHasSettings(false);
             throw new Error('Failed to fetch user settings');
         }
-        setHasSettings(true);
+        if (response.body.length > 0) {
+          setHasSettings(true);
+        }
+        else {
+          setHasSettings(false);
+        }
       } catch (error) {
         console.error("Failed to fetch user settings", error);
         setHasSettings(false);
       }
+      console.log(hasSettings);
     };
 
     checkUserSettings();
@@ -182,12 +188,12 @@ const SearchBar = ({ onDataFetched, setForecastData }) => {
       const currentData = await currentResponse.json();
       const forecastData = await forecastResponse.json();
 
-      onDataFetched(currentData, forecastData);
+      setWeatherData(currentData);
       setForecastData(forecastData);
       toast.success("Found the weather data for " + searchCity);
     } catch (error) {
       console.error("Failed to fetch weather data. Please check your API key (settings page) and try again.", error);
-      onDataFetched(null, null);
+      setWeatherData(null);
       setForecastData(null);
       toast.error("Failed to find the weather data of " + searchCity + ". Please check your API key (settings page) and try again.");
     }
@@ -269,7 +275,7 @@ const SearchBar = ({ onDataFetched, setForecastData }) => {
             </Button>
           }
         >
-          Please set up your API keys in the settings page to use the weather search.
+          Please configure your API keys on the settings page to enable the weather search functionality. Use "weather_key" as the key.
         </Alert>
       )}
     </SearchBarContainer>

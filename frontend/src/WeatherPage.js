@@ -18,11 +18,6 @@ const WeatherPage = () => {
   const [weatherData, setWeatherData] = useState(null);
   const [forecastData, setForecastData] = useState(null);
 
-  const handleDataFetched = (currentWeather, forecast) => {
-    setWeatherData(currentWeather);
-    setForecastData(forecast);
-  };
-
   return (
     <>
       <AppBar />
@@ -31,7 +26,7 @@ const WeatherPage = () => {
           <Grid2 item xs={12} sm={11} md={10} lg={9} xl={8}>
             <Grid2 container direction="column" spacing={3}>
               <Grid2 item>
-                <SearchBar onDataFetched={handleDataFetched} setForecastData={setForecastData} />
+                <SearchBar setWeatherData={setWeatherData} setForecastData={setForecastData} />
               </Grid2>
               
               {weatherData && (
