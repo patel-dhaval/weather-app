@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather API Tester</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #weatherResult {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            width: 300px;
+            height: 150px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Weather API Tester</h1>
+    <input type="text" id="cityInput" placeholder="Enter city name" />
+    <button id="getWeatherBtn">Get Weather</button>
+    <div id="weatherResult">Weather information will appear here.</div>
+
+    <script>
+        document.getElementById('getWeatherBtn').addEventListener('click', async () => {
+            const city = document.getElementById('cityInput').value.trim();
+            if (!city) {
+                alert('Please enter a city name.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/weather?city=${encodeURIComponent(city)}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include',
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.statusText}`);
+                }
+
+                const weatherData = await response.json();
+                document.getElementById('weatherResult').innerText = JSON.stringify(weatherData, null, 2);
+            } catch (error) {
+                console.error('Failed to fetch weather data:', error);
+                document.getElementById('weatherResult').innerText = 'Failed to fetch weather data.';
+            }
+        });
+    </script>
+</body>
+</html>
